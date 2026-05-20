@@ -9,5 +9,5 @@ def index():
 @home.route("/dashboard")
 def dashboard():
     if "user_id" not in session:
-        return redirect(url_for("auth.login"))
+        return redirect(url_for("auth.login.html"))
     return render_template("user/dashboard.html")

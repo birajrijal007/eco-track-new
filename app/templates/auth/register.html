@@ -1,14 +1,374 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EcoTrack - Register</title>
 
-{% block title %}Register - EcoTrack{% endblock %}
+  <style>
+    /* ── Reset & Base ── */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-{% block content %}
-    <h1>Register 🌱</h1>
-    <form method="POST">
-        <input type="text" placeholder="Full Name" name="name"><br><br>
-        <input type="email" placeholder="Email" name="email"><br><br>
-        <input type="password" placeholder="Password" name="password"><br><br>
-        <button type="submit">Register</button>
-    </form>
-    <p>Already have an account? <a href="/login">Login</a></p>
-{% endblock %}
+    body {
+      font-family: Georgia, serif;
+      background-color: #f0f4f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    /* ── Card: the white box that holds everything ── */
+    .card {
+      display: flex;
+      width: 680px;
+      background-color: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+    }
+
+    /* ══════════════════════════════════════
+       LEFT PANEL – green illustrated side
+    ══════════════════════════════════════ */
+    .left-panel {
+      width: 280px;
+      background: linear-gradient(160deg, #a8d5a2 0%, #4caf50 60%, #2e7d32 100%);
+      padding: 36px 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Logo row */
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: white;
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .logo-icon {
+      font-size: 26px;
+    }
+
+    /* Tagline */
+    .tagline {
+      color: white;
+      font-size: 22px;
+      font-weight: bold;
+      line-height: 1.4;
+      margin-top: 20px;
+    }
+
+    /* Simple city skyline drawn with CSS boxes */
+    .skyline {
+      display: flex;
+      align-items: flex-end;
+      gap: 4px;
+      margin-top: auto;
+      padding-bottom: 60px;   /* space for the bin below */
+    }
+
+    .building {
+      background-color: rgba(255,255,255,0.25);
+      border-radius: 3px 3px 0 0;
+    }
+
+    /* Each building gets a different height */
+    .b1 { width: 22px; height: 55px; }
+    .b2 { width: 30px; height: 80px; }
+    .b3 { width: 20px; height: 45px; }
+    .b4 { width: 35px; height: 95px; }
+    .b5 { width: 22px; height: 60px; }
+    .b6 { width: 25px; height: 70px; }
+
+    /* Green trash bin at the bottom */
+    .bin-area {
+      position: absolute;
+      bottom: 24px;
+      left: 28px;
+    }
+
+    .bin {
+      width: 56px;
+      background-color: #1b5e20;
+      border-radius: 0 0 8px 8px;
+      height: 44px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .bin-lid {
+      width: 64px;
+      height: 10px;
+      background-color: #1b5e20;
+      border-radius: 4px;
+      position: absolute;
+      top: -12px;
+      left: -4px;
+    }
+
+    /* Recycling symbol ♻ */
+    .bin-symbol {
+      color: white;
+      font-size: 22px;
+    }
+
+    .bin-wheels {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 4px;
+    }
+
+    .wheel {
+      width: 12px;
+      height: 12px;
+      background-color: #1b5e20;
+      border-radius: 50%;
+    }
+
+    /* ══════════════════════════════════════
+       RIGHT PANEL – the form
+    ══════════════════════════════════════ */
+    .right-panel {
+      flex: 1;
+      padding: 40px 36px;
+    }
+
+    .form-title {
+      font-size: 24px;
+      font-weight: bold;
+      color: #1a1a1a;
+      margin-bottom: 4px;
+    }
+
+    .form-subtitle {
+      font-size: 14px;
+      color: #777;
+      margin-bottom: 28px;
+    }
+
+    /* Each input group has a label icon + the actual input */
+    .input-group {
+      display: flex;
+      align-items: center;
+      border: 1.5px solid #ddd;
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-bottom: 16px;
+      gap: 10px;
+      background-color: #fafafa;
+    }
+
+    .input-group:focus-within {
+      border-color: #4caf50;
+      background-color: white;
+    }
+
+    /* The icon on the left of each input */
+    .input-icon {
+      font-size: 16px;
+      color: #888;
+    }
+
+    /* The text box itself */
+    .input-group input {
+      border: none;
+      outline: none;
+      background: transparent;
+      font-size: 14px;
+      color: #333;
+      width: 100%;
+    }
+
+    /* Eye icon on password fields */
+    .eye-icon {
+      color: #aaa;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    /* Password strength row */
+    .strength-row {
+      margin-bottom: 20px;
+    }
+
+    .strength-label {
+      font-size: 13px;
+      color: #555;
+      margin-bottom: 6px;
+    }
+
+    .strength-label span {
+      color: #4caf50;
+      font-weight: bold;
+    }
+
+    /* The green bar */
+    .strength-bar-bg {
+      height: 6px;
+      background-color: #e0e0e0;
+      border-radius: 4px;
+    }
+
+    .strength-bar-fill {
+      height: 100%;
+      width: 75%;           /* "Strong" = 75% full */
+      background-color: #4caf50;
+      border-radius: 4px;
+    }
+
+    /* Register button */
+    .register-btn {
+      width: 100%;
+      padding: 14px;
+      background-color: #2e7d32;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-bottom: 18px;
+      letter-spacing: 0.5px;
+    }
+
+    .register-btn:hover {
+      background-color: #1b5e20;  /* darker green on hover */
+    }
+
+    /* Login link at the bottom */
+    .login-link {
+      text-align: center;
+      font-size: 14px;
+      color: #666;
+    }
+
+    .login-link a {
+      color: #2e7d32;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .login-link a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+
+    <!-- ── LEFT PANEL ── -->
+    <div class="left-panel">
+
+      <!-- Logo -->
+      <div class="logo">
+        <span class="logo-icon">🌿</span>
+        EcoTrack
+      </div>
+
+      <!-- Tagline -->
+      <p class="tagline">Together, let's build a cleaner tomorrow.</p>
+
+      <!-- Simple CSS skyline -->
+      <div class="skyline">
+        <div class="building b1"></div>
+        <div class="building b2"></div>
+        <div class="building b3"></div>
+        <div class="building b4"></div>
+        <div class="building b5"></div>
+        <div class="building b6"></div>
+      </div>
+
+      <!-- Trash bin -->
+      <div class="bin-area">
+        <div class="bin">
+          <div class="bin-lid"></div>
+          <span class="bin-symbol">♻</span>
+        </div>
+        <div class="bin-wheels">
+          <div class="wheel"></div>
+          <div class="wheel"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── RIGHT PANEL ── -->
+    <div class="right-panel">
+
+      <h1 class="form-title">Create Account</h1>
+      <p class="form-subtitle">Join us and make a difference.</p>
+
+      <!-- Full Name -->
+      <div class="input-group">
+        <span class="input-icon">👤</span>
+        <input type="text" placeholder="Full Name" />
+      </div>
+
+      <!-- Email -->
+      <div class="input-group">
+        <span class="input-icon">✉️</span>
+        <input type="email" placeholder="Email Address" />
+      </div>
+
+      <!-- Password -->
+      <div class="input-group">
+        <span class="input-icon">🔒</span>
+        <input type="password" placeholder="Password" id="pw" />
+        <span class="eye-icon" onclick="togglePw('pw')">👁</span>
+      </div>
+
+      <!-- Confirm Password -->
+      <div class="input-group">
+        <span class="input-icon">🔒</span>
+        <input type="password" placeholder="Confirm Password" id="cpw" />
+        <span class="eye-icon" onclick="togglePw('cpw')">👁</span>
+      </div>
+
+      <!-- Password Strength -->
+      <div class="strength-row">
+        <p class="strength-label">Password strength: <span>Strong</span></p>
+        <div class="strength-bar-bg">
+          <div class="strength-bar-fill"></div>
+        </div>
+      </div>
+
+      <!-- Register Button -->
+      <button class="register-btn">Register</button>
+
+      <!-- Login Link -->
+      <p class="login-link">
+        Already have an account? <a href="/login">Login here</a>
+      </p>
+
+    </div>
+  </div>
+
+  <script>
+    // Toggle password visibility
+    function togglePw(id) {
+      const input = document.getElementById(id);
+      if (input.type === "password") {
+        input.type = "text";
+      } else {
+        input.type = "password";
+      }
+    }
+  </script>
+
+</body>
+</html>
+

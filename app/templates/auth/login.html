@@ -1,13 +1,469 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EcoTrack - Login</title>
 
-{% block title %}Login - EcoTrack{% endblock %}
+  <style>
+    /* ── Reset & Base ── */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-{% block content %}
-    <h1>Login 🌱</h1>
-    <form method="POST">
-        <input type="email" placeholder="Email" name="email"><br><br>
-        <input type="password" placeholder="Password" name="password"><br><br>
-        <button type="submit">Login</button>
-    </form>
-    <p>Don't have an account? <a href="/register">Register</a></p>
-{% endblock %}
+    body {
+      font-family: Georgia, serif;
+      background-color: #f0f4f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    /* ── Card: the white box that holds everything ── */
+    .card {
+      display: flex;
+      width: 660px;
+      background-color: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+    }
+
+    /* ══════════════════════════════════════
+       LEFT PANEL – green illustrated side
+    ══════════════════════════════════════ */
+    .left-panel {
+      width: 260px;
+      background: linear-gradient(160deg, #c8e6c9 0%, #81c784 50%, #4caf50 100%);
+      padding: 32px 24px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Logo row */
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #1b5e20;
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 28px;
+    }
+
+    .logo-icon {
+      font-size: 26px;
+    }
+
+    /* Welcome text */
+    .welcome-title {
+      font-size: 22px;
+      font-weight: bold;
+      color: #1a1a1a;
+      margin-bottom: 10px;
+    }
+
+    .welcome-sub {
+      font-size: 14px;
+      color: #333;
+      line-height: 1.5;
+      margin-bottom: 32px;
+    }
+
+    /* ── Illustration area ── */
+    .illustration {
+      display: flex;
+      align-items: flex-end;
+      gap: 10px;
+      margin-top: auto;
+      padding-bottom: 16px;
+    }
+
+    /* Person figure made with CSS shapes */
+    .person {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+
+    /* Head */
+    .head {
+      width: 26px;
+      height: 26px;
+      background-color: #f5c5a0;
+      border-radius: 50%;
+      margin-bottom: 2px;
+    }
+
+    /* Body */
+    .body {
+      width: 34px;
+      height: 40px;
+      background-color: #388e3c;
+      border-radius: 8px 8px 4px 4px;
+    }
+
+    /* Legs */
+    .legs {
+      display: flex;
+      gap: 4px;
+      margin-top: 2px;
+    }
+
+    .leg {
+      width: 12px;
+      height: 28px;
+      background-color: #1b5e20;
+      border-radius: 4px;
+    }
+
+    /* Arm stretched forward */
+    .arm {
+      width: 30px;
+      height: 8px;
+      background-color: #388e3c;
+      border-radius: 4px;
+      margin-top: -28px;    /* pull it up next to the body */
+      margin-left: 30px;
+    }
+
+    /* Trash bin */
+    .bin-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .bin-lid {
+      width: 52px;
+      height: 10px;
+      background-color: #1b5e20;
+      border-radius: 4px;
+      margin-bottom: 2px;
+    }
+
+    .bin-body {
+      width: 46px;
+      height: 52px;
+      background-color: #2e7d32;
+      border-radius: 0 0 8px 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 22px;
+    }
+
+    .bin-wheels {
+      display: flex;
+      justify-content: space-around;
+      width: 46px;
+      margin-top: 4px;
+    }
+
+    .wheel {
+      width: 12px;
+      height: 12px;
+      background-color: #1b5e20;
+      border-radius: 50%;
+    }
+
+    /* Decorative leaves on the right of the bin */
+    .leaves {
+      font-size: 40px;
+      margin-bottom: 10px;
+      margin-left: 6px;
+    }
+
+    /* Ground line */
+    .ground {
+      position: absolute;
+      bottom: 20px;
+      left: 16px;
+      right: 16px;
+      height: 3px;
+      background-color: rgba(0,0,0,0.1);
+      border-radius: 2px;
+    }
+
+    /* ══════════════════════════════════════
+       RIGHT PANEL – the form
+    ══════════════════════════════════════ */
+    .right-panel {
+      flex: 1;
+      padding: 50px 36px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    /* Input group: icon + text field */
+    .input-group {
+      display: flex;
+      align-items: center;
+      border: 1.5px solid #ddd;
+      border-radius: 8px;
+      padding: 11px 14px;
+      margin-bottom: 16px;
+      gap: 10px;
+      background-color: #fafafa;
+    }
+
+    .input-group:focus-within {
+      border-color: #4caf50;
+      background-color: white;
+    }
+
+    .input-icon {
+      font-size: 16px;
+      color: #888;
+    }
+
+    .input-group input {
+      border: none;
+      outline: none;
+      background: transparent;
+      font-size: 14px;
+      color: #333;
+      width: 100%;
+    }
+
+    .eye-icon {
+      color: #aaa;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    /* Row with checkbox + forgot password */
+    .options-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 22px;
+      font-size: 14px;
+    }
+
+    .remember-me {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #444;
+      cursor: pointer;
+    }
+
+    /* Custom styled checkbox */
+    .remember-me input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: #2e7d32;
+      cursor: pointer;
+    }
+
+    .forgot-link {
+      color: #2e7d32;
+      font-weight: bold;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .forgot-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Login button */
+    .login-btn {
+      width: 100%;
+      padding: 14px;
+      background-color: #2e7d32;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-bottom: 16px;
+      letter-spacing: 0.5px;
+    }
+
+    .login-btn:hover {
+      background-color: #1b5e20;
+    }
+
+    /* "or" divider */
+    .divider {
+      text-align: center;
+      color: #aaa;
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+
+    /* Google login button */
+    .google-btn {
+      width: 100%;
+      padding: 12px;
+      background-color: white;
+      color: #333;
+      font-size: 15px;
+      border: 1.5px solid #ddd;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .google-btn:hover {
+      background-color: #f5f5f5;
+    }
+
+    /* Google "G" logo using colored letters */
+    .google-logo {
+      font-size: 18px;
+      font-weight: bold;
+      font-family: Arial, sans-serif;
+    }
+
+    .g-blue  { color: #4285F4; }
+    .g-red   { color: #EA4335; }
+    .g-yellow{ color: #FBBC05; }
+    .g-green { color: #34A853; }
+
+    /* Register link */
+    .register-link {
+      text-align: center;
+      font-size: 14px;
+      color: #666;
+    }
+
+    .register-link a {
+      color: #2e7d32;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .register-link a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+
+    <!-- ── LEFT PANEL ── -->
+    <div class="left-panel">
+
+      <!-- Logo -->
+      <div class="logo">
+        <span class="logo-icon">🌿</span>
+        EcoTrack
+      </div>
+
+      <!-- Welcome text -->
+      <h2 class="welcome-title">Welcome Back!</h2>
+      <p class="welcome-sub">Login to continue and keep your city clean.</p>
+
+      <!-- Illustration: person + bin + leaves -->
+      <div class="illustration">
+
+        <!-- Person -->
+        <div class="person">
+          <div class="head"></div>
+          <div class="body"></div>
+          <div class="arm"></div>
+          <div class="legs">
+            <div class="leg"></div>
+            <div class="leg"></div>
+          </div>
+        </div>
+
+        <!-- Trash bin -->
+        <div class="bin-wrap">
+          <div class="bin-lid"></div>
+          <div class="bin-body">♻</div>
+          <div class="bin-wheels">
+            <div class="wheel"></div>
+            <div class="wheel"></div>
+          </div>
+        </div>
+
+        <!-- Leaves decoration -->
+        <div class="leaves">🌿</div>
+
+      </div>
+
+      <!-- Ground line -->
+      <div class="ground"></div>
+
+    </div>
+
+    <!-- ── RIGHT PANEL ── -->
+    <div class="right-panel">
+
+      <!-- Email input -->
+      <div class="input-group">
+        <span class="input-icon">🔒</span>
+        <input type="email" placeholder="Email Address" />
+      </div>
+
+      <!-- Password input -->
+      <div class="input-group">
+        <span class="input-icon">🔒</span>
+        <input type="password" placeholder="Password" id="pw" />
+        <span class="eye-icon" onclick="togglePw()">👁</span>
+      </div>
+
+      <!-- Remember me + Forgot password -->
+      <div class="options-row">
+        <label class="remember-me">
+          <input type="checkbox" />
+          Remember me
+        </label>
+        <a href="#" class="forgot-link">Forgot Password?</a>
+      </div>
+
+      <!-- Login button -->
+      <button class="login-btn">Login</button>
+
+      <!-- Divider -->
+      <div class="divider">or</div>
+
+      <!-- Google login -->
+      <button class="google-btn">
+        <!-- Colored G made from individual letters -->
+        <span class="google-logo">
+          <span class="g-blue">G</span><span class="g-red">o</span><span class="g-yellow">o</span><span class="g-blue">g</span><span class="g-green">l</span><span class="g-red">e</span>
+        </span>
+        Login with Google
+      </button>
+
+      <!-- Register link -->
+      <p class="register-link">
+        Don't have an account? <a href="/register">Register here</a>
+      </p>
+
+    </div>
+  </div>
+
+  <script>
+    // Show or hide the password
+    function togglePw() {
+      const input = document.getElementById("pw");
+      if (input.type === "password") {
+        input.type = "text";
+      } else {
+        input.type = "password";
+      }
+    }
+  </script>
+
+</body>
+</html>

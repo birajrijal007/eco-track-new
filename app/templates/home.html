@@ -1,10 +1,510 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EcoTrack – Smart Waste Management</title>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700;900&family=Barlow+Condensed:wght@700;900&display=swap" rel="stylesheet">
 
-{% block title %}Home - EcoTrack{% endblock %}
+  <style>
+    /* ── CSS Variables ── */
+    :root {
+      --dark: #0a1628;
+      --dark2: #0d1f38;
+      --green: #39e75f;
+      --green2: #2db84a;
+      --white: #ffffff;
+      --gray: #8899aa;
+      --nav-height: 72px;
+    }
 
-{% block content %}
-    <h1>Welcome to EcoTrack 🌱</h1>
-    <p>Smart Waste Management System for Kathmandu</p>
-    <a href="/register">Get Started</a> | 
-    <a href="/login">Login</a>
-{% endblock %}
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Barlow', sans-serif;
+      background-color: var(--dark);
+      color: var(--white);
+      overflow-x: hidden;
+    }
+
+    /* ══════════════════════════════
+       NAVBAR
+    ══════════════════════════════ */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: var(--nav-height);
+      background-color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      z-index: 100;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+
+    /* Logo */
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .logo-icon-box {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, var(--green2), var(--dark));
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1;
+    }
+
+    .logo-name {
+      font-size: 20px;
+      font-weight: 900;
+      color: #111;
+      letter-spacing: 2px;
+      font-family: 'Barlow Condensed', sans-serif;
+    }
+
+    .logo-tagline {
+      font-size: 9px;
+      color: var(--gray);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    /* Nav links */
+    .nav-links {
+      display: flex;
+      gap: 36px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 600;
+      color: #333;
+      letter-spacing: 0.3px;
+      transition: color 0.2s;
+    }
+
+    .nav-links a.active { color: var(--green2); }
+    .nav-links a:hover  { color: var(--green2); }
+
+    /* CTA button */
+    .nav-cta {
+      background-color: var(--dark);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      transition: background 0.2s;
+      font-family: 'Barlow', sans-serif;
+    }
+
+    .nav-cta:hover { background-color: #1a2e4a; }
+
+    /* ══════════════════════════════
+       HERO SECTION
+    ══════════════════════════════ */
+    .hero {
+      min-height: 100vh;
+      padding-top: var(--nav-height);
+      background: linear-gradient(120deg, #071220 0%, #0a1c35 40%, #0d2040 100%);
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Animated dot-network background */
+    .network-canvas {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    /* Glowing city silhouette behind the dots */
+    .city-bg {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 65%;
+      height: 90%;
+      pointer-events: none;
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-end;
+      padding-right: 0;
+      overflow: hidden;
+    }
+
+    /* Buildings drawn with CSS */
+    .buildings {
+      display: flex;
+      align-items: flex-end;
+      gap: 6px;
+      padding-bottom: 0;
+      opacity: 0.55;
+      filter: drop-shadow(0 0 18px rgba(0,200,255,0.35));
+    }
+
+    .bld {
+      border-radius: 2px 2px 0 0;
+      background: linear-gradient(180deg, #1a4a6e 0%, #0d2a45 100%);
+      border: 1px solid rgba(0,180,255,0.25);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Window grid effect */
+    .bld::after {
+      content: '';
+      position: absolute;
+      inset: 4px;
+      background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 8px, rgba(0,200,255,0.07) 8px, rgba(0,200,255,0.07) 9px),
+        repeating-linear-gradient(90deg, transparent, transparent 8px, rgba(0,200,255,0.07) 8px, rgba(0,200,255,0.07) 9px);
+    }
+
+    .b1  { width: 55px;  height: 180px; }
+    .b2  { width: 70px;  height: 320px; }
+    .b3  { width: 48px;  height: 140px; }
+    .b4  { width: 90px;  height: 420px; }
+    .b5  { width: 60px;  height: 260px; }
+    .b6  { width: 45px;  height: 160px; }
+    .b7  { width: 75px;  height: 380px; }
+    .b8  { width: 55px;  height: 200px; }
+    .b9  { width: 40px;  height: 130px; }
+    .b10 { width: 65px;  height: 280px; }
+
+    /* Tall spire for the centerpiece building */
+    .b4::before {
+      content: '';
+      position: absolute;
+      top: -60px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 8px;
+      height: 60px;
+      background: linear-gradient(180deg, rgba(0,200,255,0.8), rgba(0,200,255,0.1));
+    }
+
+    /* Floating tech icons on the hero */
+    .floating-icons {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .f-icon {
+      position: absolute;
+      color: var(--green);
+      font-size: 14px;
+      border: 1.5px solid var(--green);
+      border-radius: 50%;
+      padding: 6px 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      opacity: 0.85;
+      animation: floatUpDown 4s ease-in-out infinite;
+    }
+
+    .f-icon.iot   { top: 22%; right: 34%; font-size: 18px; animation-delay: 0s; }
+    .f-icon.recycle { top: 16%; right: 14%; font-size: 22px; border: none; animation-delay: 1s; }
+    .f-icon.signal  { top: 40%; right: 42%; border: none; font-size: 16px; animation-delay: 2s; }
+
+    @keyframes floatUpDown {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-10px); }
+    }
+
+    /* Green arrow play shapes (top middle of image) */
+    .arrows {
+      position: absolute;
+      top: 18%;
+      left: 38%;
+      display: flex;
+      gap: 8px;
+      opacity: 0.8;
+    }
+
+    .arrow-shape {
+      width: 0; height: 0;
+      border-top: 18px solid transparent;
+      border-bottom: 18px solid transparent;
+      border-left: 28px solid var(--green);
+    }
+
+    .arrow-shape.outline {
+      border-left-color: transparent;
+      border: 2px solid var(--green);
+      width: 32px; height: 32px;
+      clip-path: polygon(0 0, 100% 50%, 0 100%);
+      background: transparent;
+      border: none;
+      box-shadow: none;
+    }
+
+    /* Zigzag line decoration (bottom left) */
+    .zigzag {
+      position: absolute;
+      bottom: 12%;
+      left: 28%;
+      opacity: 0.6;
+    }
+
+    .zigzag svg { display: block; }
+
+    /* ── Hero content (left side text) ── */
+    .hero-content {
+      position: relative;
+      z-index: 10;
+      padding: 0 60px;
+      max-width: 560px;
+      animation: fadeInLeft 0.9s ease both;
+    }
+
+    @keyframes fadeInLeft {
+      from { opacity: 0; transform: translateX(-40px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    .hero-eyebrow {
+      font-size: 15px;
+      color: var(--gray);
+      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+    }
+
+    .hero-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(52px, 7vw, 82px);
+      font-weight: 900;
+      line-height: 1.0;
+      color: var(--white);
+      margin-bottom: 28px;
+      text-transform: uppercase;
+    }
+
+    .hero-subtitle {
+      font-size: 17px;
+      color: #ccc;
+      margin-bottom: 44px;
+      line-height: 1.5;
+    }
+
+    .hero-subtitle .highlight {
+      color: var(--green);
+      font-weight: 700;
+    }
+
+    /* Login button (replaces Get Quote) */
+    .hero-btn {
+      display: inline-block;
+      padding: 16px 48px;
+      background-color: transparent;
+      color: var(--white);
+      border: 2px solid var(--white);
+      border-radius: 4px;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      cursor: pointer;
+      text-decoration: none;
+      font-family: 'Barlow', sans-serif;
+      transition: background 0.25s, color 0.25s, border-color 0.25s;
+    }
+
+    .hero-btn:hover {
+      background-color: var(--green);
+      border-color: var(--green);
+      color: var(--dark);
+    }
+
+    /* ══════════════════════════════
+       ANIMATED DOT NETWORK (canvas)
+    ══════════════════════════════ */
+  </style>
+</head>
+<body>
+
+  <!-- ── NAVBAR ── -->
+  <nav>
+    <a href="#" class="nav-logo">
+      <div class="logo-icon-box">🌿</div>
+      <div class="logo-text">
+        <span class="logo-name">ECOTRACK</span>
+        <span class="logo-tagline">Smart Environmental Solutions</span>
+      </div>
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="#" class="active">Home</a></li>
+      <li><a href="#">About</a></li>
+      <li><a href="#">Services</a></li>
+      <li><a href="#">Projects</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+
+    <button class="nav-cta">Waste Platform</button>
+  </nav>
+
+  <!-- ── HERO ── -->
+  <section class="hero">
+
+    <!-- Dot-network canvas -->
+    <canvas class="network-canvas" id="netCanvas"></canvas>
+
+    <!-- City skyline (right side) -->
+    <div class="city-bg">
+      <div class="buildings">
+        <div class="bld b9"></div>
+        <div class="bld b1"></div>
+        <div class="bld b3"></div>
+        <div class="bld b2"></div>
+        <div class="bld b4"></div>  <!-- tallest, has spire -->
+        <div class="bld b5"></div>
+        <div class="bld b7"></div>
+        <div class="bld b6"></div>
+        <div class="bld b10"></div>
+        <div class="bld b8"></div>
+      </div>
+    </div>
+
+    <!-- Floating tech labels -->
+    <div class="floating-icons">
+      <div class="f-icon iot">IoT</div>
+      <div class="f-icon recycle">♻</div>
+      <div class="f-icon signal">◉ LIVE</div>
+    </div>
+
+    <!-- Green arrow play icons -->
+    <div class="arrows">
+      <div class="arrow-shape"></div>
+      <div class="arrow-shape" style="opacity:0.5;"></div>
+    </div>
+
+    <!-- Zigzag decoration -->
+    <div class="zigzag">
+      <svg width="180" height="30" viewBox="0 0 180 30">
+        <polyline
+          points="0,20 20,5 40,20 60,5 80,20 100,5 120,20 140,5 160,20 180,5"
+          fill="none"
+          stroke="#39e75f"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </div>
+
+    <!-- Text content -->
+    <div class="hero-content">
+      <p class="hero-eyebrow">We provide</p>
+      <h1 class="hero-title">Smart Waste<br>Management<br>Solutions</h1>
+      <p class="hero-subtitle">
+        You've got <span class="highlight">WASTE</span>,
+        we've got <span class="highlight">SOLUTIONS</span>!
+      </p>
+      <a href="/login" class="hero-btn">Login</a>
+    </div>
+
+  </section>
+
+  <!-- ══ Dot-network animation script ══ -->
+  <script>
+    const canvas = document.getElementById('netCanvas');
+    const ctx    = canvas.getContext('2d');
+
+    // Make the canvas fill the whole screen
+    function resize() {
+      canvas.width  = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    // Create a bunch of dots
+    const DOTS = 60;
+    const dots = [];
+
+    for (let i = 0; i < DOTS; i++) {
+      dots.push({
+        x:  Math.random() * window.innerWidth,
+        y:  Math.random() * window.innerHeight,
+        vx: (Math.random() - 0.5) * 0.6,   // speed in x
+        vy: (Math.random() - 0.5) * 0.6,   // speed in y
+        r:  Math.random() * 3 + 2           // radius
+      });
+    }
+
+    // How close two dots must be to draw a line between them
+    const CONNECT_DIST = 140;
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Move each dot
+      for (const d of dots) {
+        d.x += d.vx;
+        d.y += d.vy;
+        // Bounce off edges
+        if (d.x < 0 || d.x > canvas.width)  d.vx *= -1;
+        if (d.y < 0 || d.y > canvas.height) d.vy *= -1;
+      }
+
+      // Draw lines between nearby dots
+      for (let i = 0; i < dots.length; i++) {
+        for (let j = i + 1; j < dots.length; j++) {
+          const dx   = dots[i].x - dots[j].x;
+          const dy   = dots[i].y - dots[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          if (dist < CONNECT_DIST) {
+            // Fade the line based on distance
+            const alpha = 1 - dist / CONNECT_DIST;
+            ctx.beginPath();
+            ctx.moveTo(dots[i].x, dots[i].y);
+            ctx.lineTo(dots[j].x, dots[j].y);
+            ctx.strokeStyle = `rgba(57, 231, 95, ${alpha * 0.4})`;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+          }
+        }
+      }
+
+      // Draw dots (glowing green)
+      for (const d of dots) {
+        ctx.beginPath();
+        ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+        ctx.fillStyle = '#39e75f';
+        ctx.shadowColor = '#39e75f';
+        ctx.shadowBlur = 8;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+
+      requestAnimationFrame(draw);  // keep looping
+    }
+
+    draw();
+  </script>
+
+</body>
+</html>
