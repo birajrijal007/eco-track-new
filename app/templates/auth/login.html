@@ -1,15 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Login - EcoTrack</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}Login - EcoTrack{% endblock %}
+
+{% block content %}
     <h1>Login 🌱</h1>
     <form method="POST">
         <input type="email" placeholder="Email" name="email"><br><br>
         <input type="password" placeholder="Password" name="password"><br><br>
         <button type="submit">Login</button>
     </form>
-</body>
-</html>
+    <p>Don't have an account? <a href="/register">Register</a></p>
+{% endblock %}
