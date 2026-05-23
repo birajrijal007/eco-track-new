@@ -3,36 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}EcoTrack{% endblock %}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>EcoTrack</title>
+
+    <style>
+
+        /* ================= PRELOADER ================= */
+
+        #preloader {
+            position: fixed;
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(135deg, #0f2027, #2e8b57);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loader {
+            text-align: center;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        .recycle {
+            font-size: 90px;
+            animation: spin 2s linear infinite;
+        }
+
+        .loader p {
+            margin-top: 15px;
+            font-size: 22px;
+            letter-spacing: 2px;
+        }
+
+        @keyframes spin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ================= WEBSITE CONTENT ================= */
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+        }
+
+        .main-content {
+            display: none;
+        }
+
+    </style>
 </head>
 <body>
 
-    <!-- NAVBAR -->
-    <nav>
-        <a href="/">🌱 EcoTrack</a>
-        {% if session["user_id"] %}
-            <a href="/dashboard">Dashboard</a>
-            <a href="/logout">Logout</a>
-        {% else %}
-            <a href="/login">Login</a>
-            <a href="/register">Register</a>
-        {% endif %}
-    </nav>
+    <!-- ================= PRELOADER ================= -->
 
-    <!-- FLASH MESSAGES -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="alert {{ category }}">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-
-    <!-- PAGE CONTENT -->
-    <div class="container">
-        {% block content %}{% endblock %}
+    <div id="preloader">
+        <div class="loader">
+            <div class="recycle">♻</div>
+            <p>EcoTrack Loading...</p>
+        </div>
     </div>
+
+    <!-- ================= MAIN WEBSITE ================= -->
+
+    <div class="main-content" id="mainContent">
+
+        {% block content %}
+        {% endblock %}
+
+    </div>
+
+    <!-- ================= JAVASCRIPT ================= -->
+
+    <script>
+
+        window.addEventListener("load", function () {
+
+            setTimeout(() => {
+
+                const preloader = document.getElementById("preloader");
+                preloader.style.opacity = "0";
+
+                setTimeout(() => {
+                    preloader.style.display = "none";
+                    document.getElementById("mainContent").style.display = "block";
+                }, 500);
+
+            }, 2000);
+
+        });
+
+    </script>
 
 </body>
 </html>

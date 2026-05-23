@@ -5,506 +5,777 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>EcoTrack – Smart Waste Management</title>
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700;900&family=Barlow+Condensed:wght@700;900&display=swap" rel="stylesheet">
-
   <style>
-    /* ── CSS Variables ── */
     :root {
-      --dark: #0a1628;
-      --dark2: #0d1f38;
-      --green: #39e75f;
-      --green2: #2db84a;
-      --white: #ffffff;
-      --gray: #8899aa;
+      --dark:       #061a10;
+      --dark2:      #0b2a18;
+      --dark3:      #0e3320;
+      --green:      #39e75f;
+      --green2:     #2db84a;
+      --green3:     #1a8c32;
+      --white:      #ffffff;
+      --gray:       #8ba89a;
       --nav-height: 72px;
     }
-
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior: smooth; }
     body {
-      font-family: 'Barlow', sans-serif;
+      font-family:'Barlow',sans-serif;
       background-color: var(--dark);
       color: var(--white);
       overflow-x: hidden;
     }
 
-    /* ══════════════════════════════
-       NAVBAR
-    ══════════════════════════════ */
-    nav {
+    /* ══════════════ PRELOADER ══════════════ */
+    #preloader{
       position: fixed;
-      top: 0; left: 0; right: 0;
-      height: var(--nav-height);
-      background-color: white;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 40px;
-      z-index: 100;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      inset: 0;
+      width: 100%;
+      height: 100vh;
+      background:
+        radial-gradient(circle at top right, rgba(57,231,95,0.15), transparent 40%),
+        linear-gradient(160deg,#040f07 0%,#061a10 35%,#082010 60%,#040e07 100%);
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      z-index:999999;
+      transition:opacity 0.6s ease;
     }
-
-    /* Logo */
-    .nav-logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      text-decoration: none;
+    .preloader-content{ text-align:center; }
+    .loader-ring{
+      width:120px; height:120px;
+      border:4px solid rgba(57,231,95,0.15);
+      border-top:4px solid #39e75f;
+      border-radius:50%;
+      animation:spin 1.5s linear infinite;
+      margin:auto; position:relative;
     }
+    .loader-ring::before{
+      content:'♻';
+      position:absolute; inset:0;
+      display:flex; align-items:center; justify-content:center;
+      font-size:52px; color:#39e75f;
+    }
+    .loader-text{
+      margin-top:28px; font-size:34px; font-weight:900;
+      letter-spacing:4px; color:white;
+      font-family:'Barlow Condensed',sans-serif;
+    }
+    .loader-sub{
+      margin-top:10px; color:#8ba89a;
+      letter-spacing:2px; font-size:13px; text-transform:uppercase;
+    }
+    .loading-bar{
+      width:240px; height:5px;
+      background:rgba(255,255,255,0.08);
+      border-radius:10px; margin:24px auto 0; overflow:hidden;
+    }
+    .loading-progress{
+      width:0%; height:100%;
+      background:linear-gradient(90deg,#39e75f,#2db84a);
+      animation:loading 2s linear forwards;
+    }
+    @keyframes spin { 100%{ transform:rotate(360deg); } }
+    @keyframes loading { 100%{ width:100%; } }
 
+    /* ══════════════ NAVBAR ══════════════ */
+    nav {
+      position:fixed; top:0; left:0; right:0;
+      height:var(--nav-height);
+      background:rgba(6,26,16,0.96);
+      backdrop-filter: blur(10px);
+      display:flex; align-items:center; justify-content:space-between;
+      padding:0 48px;
+      z-index:200;
+      border-bottom:1px solid rgba(57,231,95,0.15);
+    }
+    .nav-logo { display:flex; align-items:center; gap:10px; text-decoration:none; }
+    .logo-img{
+  width:50px;
+  height:50px;
+  object-fit:contain;
+  border-radius:8px;
+}
     .logo-icon-box {
-      width: 38px;
-      height: 38px;
-      background: linear-gradient(135deg, var(--green2), var(--dark));
-      border-radius: 8px;
+      width:38px; height:38px;
+      background:linear-gradient(135deg,var(--green2),var(--dark3));
+      border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:20px;
+    }
+    .logo-text { display:flex; flex-direction:column; line-height:1; }
+    .logo-name { font-size:20px; font-weight:900; color:var(--white); letter-spacing:2px; font-family:'Barlow Condensed',sans-serif; }
+    .logo-tagline { font-size:9px; color:var(--gray); letter-spacing:1.5px; text-transform:uppercase; }
+    .nav-links { display:flex; gap:36px; list-style:none; }
+    .nav-links a { text-decoration:none; font-size:15px; font-weight:600; color:#ccd8cc; letter-spacing:0.3px; transition:color 0.2s; }
+    .nav-links a.active { color:var(--green); }
+    .nav-links a:hover  { color:var(--green); }
+    .nav-cta {
+      background:linear-gradient(135deg,var(--green2),var(--green3));
+      color:white; border:none; padding:12px 24px; border-radius:6px;
+      font-size:14px; font-weight:700; cursor:pointer; letter-spacing:0.5px;
+      transition:opacity 0.2s; font-family:'Barlow',sans-serif;
+    }
+    .nav-cta:hover { opacity:0.85; }
+
+    /* ══════════════ HERO ══════════════ */
+    .hero {
+      min-height:100vh;
+      padding-top:var(--nav-height);
+      background:
+        radial-gradient(ellipse 60% 50% at 70% 60%, rgba(45,184,74,0.12) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 40% at 20% 30%, rgba(57,231,95,0.06) 0%, transparent 60%),
+        linear-gradient(160deg, #040f07 0%, #061a10 35%, #082010 60%, #040e07 100%);
+      display:flex; align-items:center; position:relative; overflow:hidden;
+    }
+    .hero::before {
+      content:''; position:absolute; inset:0;
+      background-image:
+        repeating-linear-gradient(60deg,  rgba(57,231,95,0.04) 0px, rgba(57,231,95,0.04) 1px, transparent 1px, transparent 30px),
+        repeating-linear-gradient(-60deg, rgba(57,231,95,0.04) 0px, rgba(57,231,95,0.04) 1px, transparent 1px, transparent 30px),
+        repeating-linear-gradient(0deg,   rgba(57,231,95,0.03) 0px, rgba(57,231,95,0.03) 1px, transparent 1px, transparent 30px);
+      pointer-events:none;
+    }
+    .network-canvas { position:absolute; inset:0; pointer-events:none; }
+    .city-bg {
+      position:absolute; bottom:0; right:0;
+      width:62%; height:88%;
+      display:flex; align-items:flex-end; overflow:hidden; pointer-events:none;
+    }
+    .buildings { display:flex; align-items:flex-end; gap:5px; opacity:0.45; filter:drop-shadow(0 0 20px rgba(57,231,95,0.2)); }
+    .bld {
+      border-radius:2px 2px 0 0;
+      background:linear-gradient(180deg,#0d3520 0%,#041008 100%);
+      border:1px solid rgba(57,231,95,0.18);
+      position:relative; overflow:hidden;
+    }
+    .bld::after {
+      content:''; position:absolute; inset:4px;
+      background-image:
+        repeating-linear-gradient(0deg,transparent,transparent 9px,rgba(57,231,95,0.08) 9px,rgba(57,231,95,0.08) 10px),
+        repeating-linear-gradient(90deg,transparent,transparent 9px,rgba(57,231,95,0.08) 9px,rgba(57,231,95,0.08) 10px);
+    }
+    .b1{width:50px;height:160px} .b2{width:68px;height:300px} .b3{width:45px;height:130px}
+    .b4{width:88px;height:400px} .b5{width:58px;height:240px} .b6{width:42px;height:150px}
+    .b7{width:72px;height:360px} .b8{width:52px;height:190px} .b9{width:38px;height:120px}
+    .b10{width:62px;height:260px}
+    .b4::before {
+      content:''; position:absolute; top:-55px; left:50%; transform:translateX(-50%);
+      width:7px; height:55px;
+      background:linear-gradient(180deg,rgba(57,231,95,0.9),rgba(57,231,95,0.05));
+    }
+    .floating-icons { position:absolute; inset:0; pointer-events:none; }
+    .f-icon {
+      position:absolute; color:var(--green); font-size:13px;
+      border:1.5px solid var(--green); border-radius:6px;
+      padding:5px 10px; font-weight:700; letter-spacing:1px; opacity:0.9;
+      background:rgba(6,26,16,0.6);
+      animation:floatUD 4s ease-in-out infinite;
+    }
+    .f-icon.iot     { top:24%; right:32%; font-size:16px; animation-delay:0s; }
+    .f-icon.recycle { top:15%; right:13%; font-size:20px; border:none; background:none; animation-delay:1s; }
+    .f-icon.live    { top:42%; right:40%; animation-delay:1.5s; }
+    .f-icon.sensor  { top:58%; right:28%; animation-delay:2s; }
+    .f-icon.ai      { top:32%; right:18%; animation-delay:0.8s; }
+    @keyframes floatUD { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+    .arrows { position:absolute; top:18%; left:36%; display:flex; gap:8px; opacity:0.7; }
+    .arrow-shape { width:0; height:0; border-top:17px solid transparent; border-bottom:17px solid transparent; border-left:26px solid var(--green); }
+    .zigzag { position:absolute; bottom:14%; left:27%; opacity:0.55; }
+    .hero-content {
+      position:relative; z-index:10; padding:0 64px; max-width:580px;
+      animation:fadeInLeft 0.9s ease both;
+    }
+    @keyframes fadeInLeft { from{opacity:0;transform:translateX(-40px)} to{opacity:1;transform:translateX(0)} }
+    .hero-eyebrow { font-size:14px; color:var(--gray); letter-spacing:2px; text-transform:uppercase; margin-bottom:14px; }
+    .hero-title {
+      font-family:'Barlow Condensed',sans-serif;
+      font-size:clamp(50px,7vw,80px); font-weight:900; line-height:1;
+      color:var(--white); margin-bottom:24px; text-transform:uppercase;
+    }
+    .hero-title .g { color:var(--green); }
+    .hero-subtitle { font-size:17px; color:#9abba0; margin-bottom:44px; line-height:1.6; max-width:440px; }
+    .hero-subtitle .highlight { color:var(--green); font-weight:700; }
+    .hero-btns { display:flex; gap:16px; flex-wrap:wrap; }
+    .hero-btn {
+      display:inline-block; padding:15px 44px;
+      background:transparent; color:var(--white);
+      border:2px solid rgba(255,255,255,0.5); border-radius:4px;
+      font-size:16px; font-weight:700; letter-spacing:1px;
+      cursor:pointer; text-decoration:none; font-family:'Barlow',sans-serif;
+      transition:all 0.25s;
+    }
+    .hero-btn:hover { background:var(--green); border-color:var(--green); color:var(--dark); }
+    .hero-btn.primary {
+      background:linear-gradient(135deg,var(--green2),var(--green3));
+      border-color:transparent; color:white;
+    }
+    .hero-btn.primary:hover { opacity:0.88; }
+
+    /* ══════════════ STATS BAR ══════════════ */
+    .stats-bar {
+      background:linear-gradient(90deg,var(--dark2),var(--dark3));
+      border-top:1px solid rgba(57,231,95,0.15);
+      border-bottom:1px solid rgba(57,231,95,0.15);
+      display:flex; justify-content:space-around;
+      padding:28px 60px;
+    }
+    .stat { text-align:center; }
+    .stat-num { font-family:'Barlow Condensed',sans-serif; font-size:38px; font-weight:900; color:var(--green); line-height:1; }
+    .stat-label { font-size:13px; color:var(--gray); letter-spacing:1px; text-transform:uppercase; margin-top:4px; }
+
+    /* ══════════════ SERVICES ══════════════ */
+    .services {
+      background:linear-gradient(180deg,#040f07 0%,#061a10 100%);
+      padding:90px 60px;
+      position:relative;
+    }
+    .services::before {
+      content:''; position:absolute; inset:0;
+      background:repeating-linear-gradient(90deg,rgba(57,231,95,0.02) 0px,rgba(57,231,95,0.02) 1px,transparent 1px,transparent 60px);
+      pointer-events:none;
+    }
+    .section-eyebrow { font-size:12px; font-weight:700; letter-spacing:3px; color:var(--green); text-transform:uppercase; margin-bottom:10px; }
+    .section-title { font-family:'Barlow Condensed',sans-serif; font-size:46px; font-weight:900; color:var(--white); margin-bottom:48px; }
+    .section-title span { color:var(--green); }
+    .services-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
+    .svc-card {
+      background:rgba(255,255,255,0.03);
+      border:1px solid rgba(57,231,95,0.12);
+      border-radius:12px; padding:32px 28px;
+      transition:border-color 0.3s, transform 0.3s, background 0.3s;
+      position:relative; overflow:hidden;
+    }
+    .svc-card::before {
+      content:''; position:absolute; top:0; left:0; right:0; height:3px;
+      background:linear-gradient(90deg,var(--green3),var(--green));
+      transform:scaleX(0); transform-origin:left; transition:transform 0.3s;
+    }
+    .svc-card:hover { border-color:rgba(57,231,95,0.4); background:rgba(57,231,95,0.05); transform:translateY(-4px); }
+    .svc-card:hover::before { transform:scaleX(1); }
+    .svc-icon { font-size:36px; margin-bottom:16px; display:block; }
+    .svc-title { font-size:18px; font-weight:700; color:var(--white); margin-bottom:10px; }
+    .svc-desc  { font-size:14px; color:var(--gray); line-height:1.65; }
+
+    /* ══════════════ HOW IT WORKS ══════════════ */
+    .how {
+      background:linear-gradient(160deg,#051208 0%,#082015 100%);
+      padding:90px 60px;
+      border-top:1px solid rgba(57,231,95,0.1);
+    }
+    .steps { display:grid; grid-template-columns:repeat(4,1fr); gap:0; margin-top:12px; }
+    .step { text-align:center; padding:28px 20px; position:relative; }
+    .step:not(:last-child)::after {
+      content:'→'; position:absolute; right:-12px; top:50%; transform:translateY(-50%);
+      font-size:24px; color:var(--green); opacity:0.5;
+    }
+    .step-num {
+      width:56px; height:56px; border-radius:50%;
+      border:2px solid var(--green);
+      display:flex; align-items:center; justify-content:center;
+      font-family:'Barlow Condensed',sans-serif; font-size:22px; font-weight:900;
+      color:var(--green); margin:0 auto 16px;
+      background:rgba(57,231,95,0.06);
+    }
+    .step-icon { font-size:30px; margin-bottom:12px; }
+    .step-title { font-size:16px; font-weight:700; color:var(--white); margin-bottom:8px; }
+    .step-desc { font-size:13px; color:var(--gray); line-height:1.6; }
+
+    /* ══════════════ ABOUT ══════════════ */
+    .about {
+      background:linear-gradient(135deg,#f0f7f0 0%,#e8f5e8 100%);
+      color:#111; padding:90px 80px 70px;
+    }
+    .about-top { display:flex; align-items:center; gap:70px; margin-bottom:60px; }
+    .about-leaf { flex-shrink:0; width:300px; height:300px; }
+    .leaf-shape {
+      width:100%; height:100%;
+      background:linear-gradient(135deg,#4caf50 30%,#81c784 100%);
+      border-radius:0% 100% 0% 100% / 0% 100% 0% 100%;
+      position:relative; overflow:hidden;
+    }
+    .leaf-shape svg { position:absolute; bottom:0; right:0; width:78%; height:78%; opacity:0.85; }
+    .about-text { flex:1; }
+    .about-eyebrow { font-size:12px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#888; margin-bottom:12px; }
+    .about-title { font-family:'Barlow Condensed',sans-serif; font-size:50px; font-weight:900; color:#111; margin-bottom:24px; line-height:1; }
+    .about-title span { color:#2db84a; }
+    .about-para { font-size:16px; color:#444; line-height:1.7; margin-bottom:14px; max-width:560px; }
+    .about-btn {
+      display:inline-block; margin-top:20px; padding:15px 50px;
+      background:#0a1628; color:white; border:none; border-radius:6px;
+      font-size:15px; font-weight:700; cursor:pointer; text-decoration:none;
+      font-family:'Barlow',sans-serif; transition:background 0.2s;
+    }
+    .about-btn:hover { background:#1a3050; }
+    .about-divider { border:none; border-top:1.5px solid #ddd; margin-bottom:55px; }
+    .about-bottom { display:flex; gap:50px; }
+    .about-card { flex:1; display:flex; gap:20px; align-items:flex-start; }
+    .card-icon {
+      flex-shrink:0; width:68px; height:68px;
+      border:2px solid #2db84a; border-radius:8px;
+      display:flex; align-items:center; justify-content:center; font-size:28px; color:#2db84a;
+    }
+    .card-body h3 { font-size:21px; font-weight:700; color:#111; margin-bottom:10px; }
+    .card-body p  { font-size:14px; color:#555; line-height:1.65; }
+
+    /* ══════════════ CONTACT ══════════════ */
+    .contact {
+      padding: 90px 60px;
+      background: linear-gradient(180deg, #061a10 0%, #041008 100%);
+      border-top: 1px solid rgba(57,231,95,0.1);
+    }
+    .contact-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 50px;
+      margin-top: 40px;
+    }
+    .contact-info {
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+    }
+    .contact-box {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(57,231,95,0.1);
+      padding: 24px;
+      border-radius: 12px;
+      transition: border-color 0.3s, background 0.3s;
+    }
+    .contact-box:hover {
+      border-color: rgba(57,231,95,0.35);
+      background: rgba(57,231,95,0.04);
+    }
+    .contact-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 10px;
+      background: rgba(57,231,95,0.08);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
+      font-size: 26px;
+      flex-shrink: 0;
     }
-
-    .logo-text {
-      display: flex;
-      flex-direction: column;
-      line-height: 1;
-    }
-
-    .logo-name {
-      font-size: 20px;
-      font-weight: 900;
-      color: #111;
-      letter-spacing: 2px;
-      font-family: 'Barlow Condensed', sans-serif;
-    }
-
-    .logo-tagline {
-      font-size: 9px;
-      color: var(--gray);
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-    }
-
-    /* Nav links */
-    .nav-links {
-      display: flex;
-      gap: 36px;
-      list-style: none;
-    }
-
-    .nav-links a {
-      text-decoration: none;
-      font-size: 15px;
-      font-weight: 600;
-      color: #333;
-      letter-spacing: 0.3px;
-      transition: color 0.2s;
-    }
-
-    .nav-links a.active { color: var(--green2); }
-    .nav-links a:hover  { color: var(--green2); }
-
-    /* CTA button */
-    .nav-cta {
-      background-color: var(--dark);
-      color: white;
-      border: none;
-      padding: 12px 24px;
-      border-radius: 6px;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      letter-spacing: 0.5px;
-      transition: background 0.2s;
-      font-family: 'Barlow', sans-serif;
-    }
-
-    .nav-cta:hover { background-color: #1a2e4a; }
-
-    /* ══════════════════════════════
-       HERO SECTION
-    ══════════════════════════════ */
-    .hero {
-      min-height: 100vh;
-      padding-top: var(--nav-height);
-      background: linear-gradient(120deg, #071220 0%, #0a1c35 40%, #0d2040 100%);
-      display: flex;
-      align-items: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    /* Animated dot-network background */
-    .network-canvas {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-    }
-
-    /* Glowing city silhouette behind the dots */
-    .city-bg {
-      position: absolute;
-      bottom: 0;
-      right: 0;
-      width: 65%;
-      height: 90%;
-      pointer-events: none;
-      display: flex;
-      align-items: flex-end;
-      justify-content: flex-end;
-      padding-right: 0;
-      overflow: hidden;
-    }
-
-    /* Buildings drawn with CSS */
-    .buildings {
-      display: flex;
-      align-items: flex-end;
-      gap: 6px;
-      padding-bottom: 0;
-      opacity: 0.55;
-      filter: drop-shadow(0 0 18px rgba(0,200,255,0.35));
-    }
-
-    .bld {
-      border-radius: 2px 2px 0 0;
-      background: linear-gradient(180deg, #1a4a6e 0%, #0d2a45 100%);
-      border: 1px solid rgba(0,180,255,0.25);
-      position: relative;
-      overflow: hidden;
-    }
-
-    /* Window grid effect */
-    .bld::after {
-      content: '';
-      position: absolute;
-      inset: 4px;
-      background-image:
-        repeating-linear-gradient(0deg, transparent, transparent 8px, rgba(0,200,255,0.07) 8px, rgba(0,200,255,0.07) 9px),
-        repeating-linear-gradient(90deg, transparent, transparent 8px, rgba(0,200,255,0.07) 8px, rgba(0,200,255,0.07) 9px);
-    }
-
-    .b1  { width: 55px;  height: 180px; }
-    .b2  { width: 70px;  height: 320px; }
-    .b3  { width: 48px;  height: 140px; }
-    .b4  { width: 90px;  height: 420px; }
-    .b5  { width: 60px;  height: 260px; }
-    .b6  { width: 45px;  height: 160px; }
-    .b7  { width: 75px;  height: 380px; }
-    .b8  { width: 55px;  height: 200px; }
-    .b9  { width: 40px;  height: 130px; }
-    .b10 { width: 65px;  height: 280px; }
-
-    /* Tall spire for the centerpiece building */
-    .b4::before {
-      content: '';
-      position: absolute;
-      top: -60px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 8px;
-      height: 60px;
-      background: linear-gradient(180deg, rgba(0,200,255,0.8), rgba(0,200,255,0.1));
-    }
-
-    /* Floating tech icons on the hero */
-    .floating-icons {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-    }
-
-    .f-icon {
-      position: absolute;
-      color: var(--green);
-      font-size: 14px;
-      border: 1.5px solid var(--green);
-      border-radius: 50%;
-      padding: 6px 10px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      opacity: 0.85;
-      animation: floatUpDown 4s ease-in-out infinite;
-    }
-
-    .f-icon.iot   { top: 22%; right: 34%; font-size: 18px; animation-delay: 0s; }
-    .f-icon.recycle { top: 16%; right: 14%; font-size: 22px; border: none; animation-delay: 1s; }
-    .f-icon.signal  { top: 40%; right: 42%; border: none; font-size: 16px; animation-delay: 2s; }
-
-    @keyframes floatUpDown {
-      0%, 100% { transform: translateY(0); }
-      50%       { transform: translateY(-10px); }
-    }
-
-    /* Green arrow play shapes (top middle of image) */
-    .arrows {
-      position: absolute;
-      top: 18%;
-      left: 38%;
-      display: flex;
-      gap: 8px;
-      opacity: 0.8;
-    }
-
-    .arrow-shape {
-      width: 0; height: 0;
-      border-top: 18px solid transparent;
-      border-bottom: 18px solid transparent;
-      border-left: 28px solid var(--green);
-    }
-
-    .arrow-shape.outline {
-      border-left-color: transparent;
-      border: 2px solid var(--green);
-      width: 32px; height: 32px;
-      clip-path: polygon(0 0, 100% 50%, 0 100%);
-      background: transparent;
-      border: none;
-      box-shadow: none;
-    }
-
-    /* Zigzag line decoration (bottom left) */
-    .zigzag {
-      position: absolute;
-      bottom: 12%;
-      left: 28%;
-      opacity: 0.6;
-    }
-
-    .zigzag svg { display: block; }
-
-    /* ── Hero content (left side text) ── */
-    .hero-content {
-      position: relative;
-      z-index: 10;
-      padding: 0 60px;
-      max-width: 560px;
-      animation: fadeInLeft 0.9s ease both;
-    }
-
-    @keyframes fadeInLeft {
-      from { opacity: 0; transform: translateX(-40px); }
-      to   { opacity: 1; transform: translateX(0); }
-    }
-
-    .hero-eyebrow {
-      font-size: 15px;
-      color: var(--gray);
-      letter-spacing: 0.5px;
-      margin-bottom: 14px;
-    }
-
-    .hero-title {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: clamp(52px, 7vw, 82px);
-      font-weight: 900;
-      line-height: 1.0;
+    .contact-box h3 {
+      margin-bottom: 8px;
       color: var(--white);
-      margin-bottom: 28px;
-      text-transform: uppercase;
-    }
-
-    .hero-subtitle {
-      font-size: 17px;
-      color: #ccc;
-      margin-bottom: 44px;
-      line-height: 1.5;
-    }
-
-    .hero-subtitle .highlight {
-      color: var(--green);
-      font-weight: 700;
-    }
-
-    /* Login button (replaces Get Quote) */
-    .hero-btn {
-      display: inline-block;
-      padding: 16px 48px;
-      background-color: transparent;
-      color: var(--white);
-      border: 2px solid var(--white);
-      border-radius: 4px;
       font-size: 16px;
       font-weight: 700;
-      letter-spacing: 1px;
-      cursor: pointer;
-      text-decoration: none;
+    }
+    .contact-box p {
+      color: var(--gray);
+      font-size: 14px;
+    }
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .contact-form input,
+    .contact-form textarea {
+      width: 100%;
+      padding: 16px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(57,231,95,0.15);
+      border-radius: 10px;
+      color: var(--white);
+      font-size: 15px;
       font-family: 'Barlow', sans-serif;
-      transition: background 0.25s, color 0.25s, border-color 0.25s;
+      outline: none;
+      transition: border-color 0.3s;
     }
-
-    .hero-btn:hover {
-      background-color: var(--green);
-      border-color: var(--green);
-      color: var(--dark);
+    .contact-form input::placeholder,
+    .contact-form textarea::placeholder {
+      color: var(--gray);
     }
+    .contact-form input:focus,
+    .contact-form textarea:focus {
+      border-color: rgba(57,231,95,0.5);
+    }
+    .contact-form textarea {
+      resize: none;
+    }
+    .contact-form button {
+      padding: 16px;
+      background: linear-gradient(135deg, var(--green2), var(--green3));
+      border: none;
+      border-radius: 10px;
+      color: white;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: 'Barlow', sans-serif;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      transition: opacity 0.3s;
+    }
+    .contact-form button:hover { opacity: 0.85; }
 
-    /* ══════════════════════════════
-       ANIMATED DOT NETWORK (canvas)
-    ══════════════════════════════ */
+    /* ══════════════ FOOTER ══════════════ */
+    footer {
+      background: #020b05;
+      border-top: 1px solid rgba(57,231,95,0.12);
+      padding: 40px 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer-logo { font-family:'Barlow Condensed',sans-serif; font-size:22px; font-weight:900; color:var(--white); letter-spacing:2px; }
+    .footer-logo span { color:var(--green); }
+    .footer-tagline { font-size:13px; color:var(--gray); margin-top:4px; }
+    .footer-links { display:flex; gap:28px; list-style:none; }
+    .footer-links a { color:var(--gray); text-decoration:none; font-size:14px; transition:color 0.2s; }
+    .footer-links a:hover { color:var(--green); }
+    .footer-copy { font-size:13px; color:#445544; }
   </style>
 </head>
 <body>
 
-  <!-- ── NAVBAR ── -->
-  <nav>
-    <a href="#" class="nav-logo">
-      <div class="logo-icon-box">🌿</div>
-      <div class="logo-text">
-        <span class="logo-name">ECOTRACK</span>
-        <span class="logo-tagline">Smart Environmental Solutions</span>
+<!-- PRELOADER -->
+<div id="preloader">
+  <div class="preloader-content">
+    <div class="loader-ring"></div>
+    <div class="loader-text">ECOTRACK</div>
+    <div class="loader-sub">Smart Waste Management System</div>
+    <div class="loading-bar">
+      <div class="loading-progress"></div>
+    </div>
+  </div>
+</div>
+
+<!-- NAVBAR -->
+<nav>
+<a href="#" class="nav-logo">
+    <img src="{{ url_for('static', filename='image/logo.png') }}"
+         alt="EcoTrack Logo"
+         class="logo-img">
+    <div class="logo-text">
+        <span class="logo-name">EcoTrack</span>
+        <span class="logo-tagline">Smart Waste Management</span>
+    </div>
+</a>
+  <ul class="nav-links">
+    <li><a href="#" class="active">Home</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="nav-cta">Waste Platform</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <canvas class="network-canvas" id="netCanvas"></canvas>
+
+  <div class="city-bg">
+    <div class="buildings">
+      <div class="bld b9"></div><div class="bld b1"></div><div class="bld b3"></div>
+      <div class="bld b2"></div><div class="bld b4"></div><div class="bld b5"></div>
+      <div class="bld b7"></div><div class="bld b6"></div><div class="bld b10"></div>
+      <div class="bld b8"></div>
+    </div>
+  </div>
+
+  <div class="floating-icons">
+    <div class="f-icon iot">IoT</div>
+    <div class="f-icon recycle">♻</div>
+    <div class="f-icon live">◉ LIVE</div>
+    <div class="f-icon sensor">📡 SENSOR</div>
+    <div class="f-icon ai">🤖 AI</div>
+  </div>
+
+  <div class="arrows">
+    <div class="arrow-shape"></div>
+    <div class="arrow-shape" style="opacity:0.45"></div>
+  </div>
+
+  <div class="zigzag">
+    <svg width="180" height="28" viewBox="0 0 180 28">
+      <polyline points="0,20 20,5 40,20 60,5 80,20 100,5 120,20 140,5 160,20 180,5"
+        fill="none" stroke="#39e75f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+
+  <div class="hero-content">
+    <p class="hero-eyebrow">We Provide</p>
+    <h1 class="hero-title">Smart <span class="g">Waste</span><br>Management<br>Solutions</h1>
+    <p class="hero-subtitle">
+      You've got <span class="highlight">WASTE</span>, we've got <span class="highlight">SOLUTIONS</span>!
+      Powering cleaner cities through IoT, AI, and real-time data.
+    </p>
+    <div class="hero-btns">
+      <a href="/login" class="hero-btn primary">Login</a>
+      <a href="#services" class="hero-btn">Our Services</a>
+    </div>
+  </div>
+</section>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stat"><div class="stat-num">500+</div><div class="stat-label">Smart Bins Deployed</div></div>
+  <div class="stat"><div class="stat-num">98%</div><div class="stat-label">Collection Efficiency</div></div>
+  <div class="stat"><div class="stat-num">40%</div><div class="stat-label">Fuel Cost Reduced</div></div>
+  <div class="stat"><div class="stat-num">120K</div><div class="stat-label">Tons Recycled</div></div>
+  <div class="stat"><div class="stat-num">24/7</div><div class="stat-label">Live Monitoring</div></div>
+</div>
+
+<!-- SERVICES -->
+<section class="services" id="services">
+  <p class="section-eyebrow">What We Offer</p>
+  <h2 class="section-title">Our <span>Services</span></h2>
+  <div class="services-grid">
+    <div class="svc-card">
+      <span class="svc-icon">🗑️</span>
+      <div class="svc-title">Smart Bin Monitoring</div>
+      <p class="svc-desc">IoT-enabled sensors track fill levels in real time and alert teams before bins overflow, reducing complaints and missed pickups.</p>
+    </div>
+    <div class="svc-card">
+      <span class="svc-icon">🛣️</span>
+      <div class="svc-title">Route Optimization</div>
+      <p class="svc-desc">AI-powered algorithms dynamically plan the shortest, most efficient collection routes, saving fuel and cutting CO₂ emissions.</p>
+    </div>
+    <div class="svc-card">
+      <span class="svc-icon">♻️</span>
+      <div class="svc-title">Recycling Analytics</div>
+      <p class="svc-desc">Track recycling rates per zone, identify low-compliance areas, and run targeted awareness campaigns backed by real data.</p>
+    </div>
+    <div class="svc-card">
+      <span class="svc-icon">📊</span>
+      <div class="svc-title">Real-Time Dashboard</div>
+      <p class="svc-desc">A live control centre showing every bin, truck, and collection event across your city on an interactive map.</p>
+    </div>
+    <div class="svc-card">
+      <span class="svc-icon">🚛</span>
+      <div class="svc-title">Fleet Management</div>
+      <p class="svc-desc">Monitor vehicle health, driver behaviour, and trip logs to keep your waste collection fleet running at peak performance.</p>
+    </div>
+    <div class="svc-card">
+      <span class="svc-icon">📱</span>
+      <div class="svc-title">Citizen Mobile App</div>
+      <p class="svc-desc">Residents can report illegal dumping, check pickup schedules, and earn eco-points for recycling — all from one easy app.</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="how">
+  <p class="section-eyebrow">The Process</p>
+  <h2 class="section-title">How It <span>Works</span></h2>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">01</div>
+      <div class="step-icon">📡</div>
+      <div class="step-title">Sense</div>
+      <p class="step-desc">Smart sensors inside bins measure fill level, weight, and odour 24/7 using ultrasonic and gas technology.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <div class="step-icon">☁️</div>
+      <div class="step-title">Transmit</div>
+      <p class="step-desc">Data is sent over LoRaWAN or 4G to EcoTrack's cloud platform in real time, with no manual reporting.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <div class="step-icon">🤖</div>
+      <div class="step-title">Analyse</div>
+      <p class="step-desc">Our AI engine processes patterns, predicts fill times, and automatically schedules the optimal collection routes.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">04</div>
+      <div class="step-icon">✅</div>
+      <div class="step-title">Act</div>
+      <p class="step-desc">Drivers receive turn-by-turn route guidance on their phones. Managers review live reports. Cities stay clean.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="about-top">
+    <div class="about-leaf">
+      <div class="leaf-shape">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <g stroke="#111" stroke-width="2.5" fill="none" stroke-linecap="round">
+            <line x1="20" y1="180" x2="20" y2="100"/><line x1="20" y1="100" x2="60" y2="100"/>
+            <line x1="60" y1="100" x2="60" y2="60"/><line x1="60" y1="60" x2="120" y2="60"/>
+            <line x1="120" y1="60" x2="120" y2="30"/>
+            <line x1="50" y1="180" x2="50" y2="140"/><line x1="50" y1="140" x2="90" y2="140"/>
+            <line x1="90" y1="140" x2="90" y2="80"/><line x1="90" y1="80" x2="150" y2="80"/>
+            <line x1="150" y1="80" x2="150" y2="50"/>
+            <line x1="80" y1="180" x2="80" y2="160"/><line x1="80" y1="160" x2="130" y2="160"/>
+            <line x1="130" y1="160" x2="130" y2="110"/><line x1="130" y1="110" x2="180" y2="110"/>
+            <circle cx="60" cy="100" r="5" fill="#111"/><circle cx="60" cy="60" r="5" fill="#111"/>
+            <circle cx="120" cy="60" r="5" fill="#111"/><circle cx="120" cy="30" r="5" fill="none"/>
+            <circle cx="90" cy="140" r="5" fill="#111"/><circle cx="90" cy="80" r="5" fill="#111"/>
+            <circle cx="150" cy="80" r="5" fill="#111"/><circle cx="150" cy="50" r="5" fill="none"/>
+            <circle cx="130" cy="160" r="5" fill="#111"/><circle cx="130" cy="110" r="5" fill="#111"/>
+            <rect x="95" y="90" width="30" height="40" rx="3" fill="#111" stroke="none"/>
+            <line x1="100" y1="90" x2="100" y2="82"/><line x1="107" y1="90" x2="107" y2="82"/>
+            <line x1="114" y1="90" x2="114" y2="82"/><line x1="100" y1="130" x2="100" y2="138"/>
+            <line x1="107" y1="130" x2="107" y2="138"/><line x1="114" y1="130" x2="114" y2="138"/>
+          </g>
       </div>
-    </a>
+    </div>
+    <div class="about-text">
+      <p class="about-eyebrow">About Us</p>
+      <h2 class="about-title">The Minds Behind <span>EcoTrack</span></h2>
+      <p class="about-para"> We are a team of five tech students from Softwarica College of IT and E-commerce who looked at traditional waste management systems and saw an opportunity for innovation.
 
-    <ul class="nav-links">
-      <li><a href="#" class="active">Home</a></li>
-      <li><a href="#">About</a></li>
-      <li><a href="#">Services</a></li>
-      <li><a href="#">Projects</a></li>
-      <li><a href="#">Contact</a></li>
-    </ul>
+Driven by a shared vision of environmental sustainability and digital transformation, we engineered EcoTrack. Our platform isn't just about collecting garbage—it’s about optimizing routes, tracking live bin data, reducing carbon footprints, and giving municipalities and businesses the data they need to keep our spaces vibrant and clean. At EcoTrack, we believe the future of sustainability lies in smart data.</p>
+      <p class="about-para">We're reshaping the future of waste management through innovation and sustainability — bringing cutting-edge IoT and AI solutions that redefine efficiency and environmental consciousness.</p>
+      <a href="#" class="about-btn">Read More</a>
+    </div>
+  </div>
+  <hr class="about-divider"/>
+  <div class="about-bottom">
+    <div class="about-card">
+      <div class="card-icon">🏆</div>
+      <div class="card-body">
+        <h3>Our Vision</h3>
+        <p>A future where waste transforms into smart solutions, driving digital transformation for cleaner communities and a more vibrant urban landscape across the globe.</p>
+      </div>
+    </div>
+    <div class="about-card">
+      <div class="card-icon">📈</div>
+      <div class="card-body">
+        <h3>Our Mission</h3>
+        <p>Revolutionizing waste management with smart solutions, fostering digital transformation and sustainability — empowering communities and businesses for cleaner, vibrant urban spaces.</p>
+      </div>
+    </div>
+    <div class="about-card">
+      <div class="card-icon">🌍</div>
+      <div class="card-body">
+        <h3>Projected Impact</h3>
+        <p>EcoTrack's architecture is simulated to optimize urban sanitation workflows. Once fully deployed, the system's IoT infrastructure is capable of boosting local collection efficiency up to 98% and reducing traditional fleet management overhead significantly.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <button class="nav-cta">Waste Platform</button>
-  </nav>
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <p class="section-eyebrow">Get In Touch</p>
+  <h2 class="section-title">Contact <span>EcoTrack</span></h2>
+  <div class="contact-container">
 
-  <!-- ── HERO ── -->
-  <section class="hero">
-
-    <!-- Dot-network canvas -->
-    <canvas class="network-canvas" id="netCanvas"></canvas>
-
-    <!-- City skyline (right side) -->
-    <div class="city-bg">
-      <div class="buildings">
-        <div class="bld b9"></div>
-        <div class="bld b1"></div>
-        <div class="bld b3"></div>
-        <div class="bld b2"></div>
-        <div class="bld b4"></div>  <!-- tallest, has spire -->
-        <div class="bld b5"></div>
-        <div class="bld b7"></div>
-        <div class="bld b6"></div>
-        <div class="bld b10"></div>
-        <div class="bld b8"></div>
+    <!-- Left: Info boxes -->
+    <div class="contact-info">
+      <div class="contact-box">
+        <div class="contact-icon">📍</div>
+        <div>
+          <h3>Address</h3>
+          <p>Kathmandu, Nepal</p>
+        </div>
+      </div>
+      <div class="contact-box">
+        <div class="contact-icon">📞</div>
+        <div>
+          <h3>Phone</h3>
+          <p>+977 9863477386</p>
+        </div>
+      </div>
+      <div class="contact-box">
+        <div class="contact-icon">📧</div>
+        <div>
+          <h3>Email</h3>
+          <p>akhilhero223@gmail.com</p>
+        </div>
       </div>
     </div>
 
-    <!-- Floating tech labels -->
-    <div class="floating-icons">
-      <div class="f-icon iot">IoT</div>
-      <div class="f-icon recycle">♻</div>
-      <div class="f-icon signal">◉ LIVE</div>
-    </div>
+    <!-- Right: Form -->
+    <form class="contact-form" onsubmit="return false;">
+      <input type="text" placeholder="Your Name" required>
+      <input type="email" placeholder="Your Email" required>
+      <textarea rows="6" placeholder="Your Message"></textarea>
+      <button type="submit">Send Message</button>
+    </form>
 
-    <!-- Green arrow play icons -->
-    <div class="arrows">
-      <div class="arrow-shape"></div>
-      <div class="arrow-shape" style="opacity:0.5;"></div>
-    </div>
+  </div>
+</section>
 
-    <!-- Zigzag decoration -->
-    <div class="zigzag">
-      <svg width="180" height="30" viewBox="0 0 180 30">
-        <polyline
-          points="0,20 20,5 40,20 60,5 80,20 100,5 120,20 140,5 160,20 180,5"
-          fill="none"
-          stroke="#39e75f"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-      </svg>
-    </div>
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="footer-logo">ECO<span>TRACK</span></div>
+    <div class="footer-tagline">Smart Environmental Solutions</div>
+  </div>
+  <ul class="footer-links">
+    <li><a href="#">Home</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="footer-copy">© 2026 EcoTrack. All rights reserved.</div>
+</footer>
 
-    <!-- Text content -->
-    <div class="hero-content">
-      <p class="hero-eyebrow">We provide</p>
-      <h1 class="hero-title">Smart Waste<br>Management<br>Solutions</h1>
-      <p class="hero-subtitle">
-        You've got <span class="highlight">WASTE</span>,
-        we've got <span class="highlight">SOLUTIONS</span>!
-      </p>
-      <a href="/login" class="hero-btn">Login</a>
-    </div>
-
-  </section>
-
-  <!-- ══ Dot-network animation script ══ -->
-  <script>
-    const canvas = document.getElementById('netCanvas');
-    const ctx    = canvas.getContext('2d');
-
-    // Make the canvas fill the whole screen
-    function resize() {
-      canvas.width  = window.innerWidth;
-      canvas.height = window.innerHeight;
+<!-- Dot-network canvas -->
+<script>
+  const canvas = document.getElementById('netCanvas');
+  const ctx    = canvas.getContext('2d');
+  function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+  const DOTS = 55;
+  const dots = [];
+  for (let i = 0; i < DOTS; i++) {
+    dots.push({
+      x:  Math.random() * window.innerWidth,
+      y:  Math.random() * window.innerHeight,
+      vx: (Math.random() - 0.5) * 0.5,
+      vy: (Math.random() - 0.5) * 0.5,
+      r:  Math.random() * 2.5 + 1.5
+    });
+  }
+  const CONNECT_DIST = 130;
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (const d of dots) {
+      d.x += d.vx; d.y += d.vy;
+      if (d.x < 0 || d.x > canvas.width)  d.vx *= -1;
+      if (d.y < 0 || d.y > canvas.height) d.vy *= -1;
     }
-    resize();
-    window.addEventListener('resize', resize);
-
-    // Create a bunch of dots
-    const DOTS = 60;
-    const dots = [];
-
-    for (let i = 0; i < DOTS; i++) {
-      dots.push({
-        x:  Math.random() * window.innerWidth,
-        y:  Math.random() * window.innerHeight,
-        vx: (Math.random() - 0.5) * 0.6,   // speed in x
-        vy: (Math.random() - 0.5) * 0.6,   // speed in y
-        r:  Math.random() * 3 + 2           // radius
-      });
-    }
-
-    // How close two dots must be to draw a line between them
-    const CONNECT_DIST = 140;
-
-    function draw() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      // Move each dot
-      for (const d of dots) {
-        d.x += d.vx;
-        d.y += d.vy;
-        // Bounce off edges
-        if (d.x < 0 || d.x > canvas.width)  d.vx *= -1;
-        if (d.y < 0 || d.y > canvas.height) d.vy *= -1;
-      }
-
-      // Draw lines between nearby dots
-      for (let i = 0; i < dots.length; i++) {
-        for (let j = i + 1; j < dots.length; j++) {
-          const dx   = dots[i].x - dots[j].x;
-          const dy   = dots[i].y - dots[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-
-          if (dist < CONNECT_DIST) {
-            // Fade the line based on distance
-            const alpha = 1 - dist / CONNECT_DIST;
-            ctx.beginPath();
-            ctx.moveTo(dots[i].x, dots[i].y);
-            ctx.lineTo(dots[j].x, dots[j].y);
-            ctx.strokeStyle = `rgba(57, 231, 95, ${alpha * 0.4})`;
-            ctx.lineWidth = 1;
-            ctx.stroke();
-          }
+    for (let i = 0; i < dots.length; i++) {
+      for (let j = i + 1; j < dots.length; j++) {
+        const dx = dots[i].x - dots[j].x, dy = dots[i].y - dots[j].y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < CONNECT_DIST) {
+          const alpha = 1 - dist / CONNECT_DIST;
+          ctx.beginPath();
+          ctx.moveTo(dots[i].x, dots[i].y);
+          ctx.lineTo(dots[j].x, dots[j].y);
+          ctx.strokeStyle = `rgba(57,231,95,${alpha * 0.35})`;
+          ctx.lineWidth = 1;
+          ctx.stroke();
         }
       }
-
-      // Draw dots (glowing green)
-      for (const d of dots) {
-        ctx.beginPath();
-        ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
-        ctx.fillStyle = '#39e75f';
-        ctx.shadowColor = '#39e75f';
-        ctx.shadowBlur = 8;
-        ctx.fill();
-        ctx.shadowBlur = 0;
-      }
-
-      requestAnimationFrame(draw);  // keep looping
     }
+    for (const d of dots) {
+      ctx.beginPath();
+      ctx.arc(d.x, d.y, d.r, 0, Math.PI*2);
+      ctx.fillStyle = '#39e75f';
+      ctx.shadowColor = '#39e75f';
+      ctx.shadowBlur = 7;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+</script>
 
-    draw();
-  </script>
+<!-- Preloader -->
+<script>
+  window.addEventListener("load", function(){
+    setTimeout(function(){
+      const preloader = document.getElementById("preloader");
+      preloader.style.opacity = "0";
+      setTimeout(function(){ preloader.style.display = "none"; }, 600);
+    }, 2000);
+  });
+</script>
 
 </body>
 </html>

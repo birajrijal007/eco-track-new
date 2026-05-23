@@ -1,374 +1,560 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>EcoTrack - Register</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EcoTrack — Create Account</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  <style>
-    /* ── Reset & Base ── */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+  :root {
+    --green-deep: #1a3d2b;
+    --green-mid: #2d6a4f;
+    --green-light: #52b788;
+    --green-pale: #d8f3dc;
+    --green-glow: #74c69d;
+    --white: #ffffff;
+    --gray-soft: #f4f7f5;
+    --gray-border: #d6e8dd;
+    --text-dark: #0f2419;
+    --text-muted: #6b8f71;
+  }
 
-    body {
-      font-family: Georgia, serif;
-      background-color: #f0f4f0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-    }
+  html, body {
+    width: 100%; height: 100%;
+    font-family: 'DM Sans', sans-serif;
+    background: var(--gray-soft);
+    overflow: hidden;
+  }
 
-    /* ── Card: the white box that holds everything ── */
-    .card {
-      display: flex;
-      width: 680px;
-      background-color: white;
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.12);
-    }
+  .page {
+    width: 100vw; height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
 
-    /* ══════════════════════════════════════
-       LEFT PANEL – green illustrated side
-    ══════════════════════════════════════ */
-    .left-panel {
-      width: 280px;
-      background: linear-gradient(160deg, #a8d5a2 0%, #4caf50 60%, #2e7d32 100%);
-      padding: 36px 28px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      position: relative;
-      overflow: hidden;
-    }
+  /* ── LEFT PANEL ── */
+  .left {
+    background: linear-gradient(160deg, var(--green-deep) 0%, var(--green-mid) 60%, var(--green-light) 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 56px 64px;
+    position: relative;
+    overflow: hidden;
+  }
 
-    /* Logo row */
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: white;
-      font-size: 22px;
-      font-weight: bold;
-    }
+  .left::before {
+    content: '';
+    position: absolute;
+    width: 420px; height: 420px;
+    border-radius: 50%;
+    background: rgba(116,198,157,.15);
+    top: -100px; right: -120px;
+  }
+  .left::after {
+    content: '';
+    position: absolute;
+    width: 280px; height: 280px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.06);
+    bottom: 60px; left: -80px;
+  }
 
-    .logo-icon {
-      font-size: 26px;
-    }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 1;
+  }
+  .brand-icon {
+    width: 44px; height: 44px;
+    background: rgba(255,255,255,.15);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+  }
+  .brand-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    color: var(--white);
+    letter-spacing: .5px;
+  }
 
-    /* Tagline */
-    .tagline {
-      color: white;
-      font-size: 22px;
-      font-weight: bold;
-      line-height: 1.4;
-      margin-top: 20px;
-    }
+  .left-body {
+    z-index: 1;
+  }
+  .left-body h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 3.5vw, 50px);
+    color: var(--white);
+    line-height: 1.18;
+    margin-bottom: 20px;
+  }
+  .left-body p {
+    font-size: 16px;
+    color: rgba(255,255,255,.7);
+    line-height: 1.75;
+    max-width: 320px;
+  }
 
-    /* Simple city skyline drawn with CSS boxes */
-    .skyline {
-      display: flex;
-      align-items: flex-end;
-      gap: 4px;
-      margin-top: auto;
-      padding-bottom: 60px;   /* space for the bin below */
-    }
+  .features {
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .feature-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(255,255,255,.1);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,.18);
+    border-radius: 14px;
+    padding: 14px 18px;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    animation: fadeUp .7s ease both;
+  }
+  .feature-item:nth-child(1) { animation-delay: .15s; }
+  .feature-item:nth-child(2) { animation-delay: .25s; }
+  .feature-item:nth-child(3) { animation-delay: .35s; }
+  .feature-icon {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    background: rgba(255,255,255,.15);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
 
-    .building {
-      background-color: rgba(255,255,255,0.25);
-      border-radius: 3px 3px 0 0;
-    }
+  /* ── RIGHT PANEL ── */
+  .right {
+    background: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 56px;
+    position: relative;
+    overflow-y: auto;
+  }
 
-    /* Each building gets a different height */
-    .b1 { width: 22px; height: 55px; }
-    .b2 { width: 30px; height: 80px; }
-    .b3 { width: 20px; height: 45px; }
-    .b4 { width: 35px; height: 95px; }
-    .b5 { width: 22px; height: 60px; }
-    .b6 { width: 25px; height: 70px; }
+  .right::before {
+    content: '🌿';
+    position: absolute;
+    font-size: 200px;
+    opacity: .03;
+    bottom: -20px; right: -20px;
+    line-height: 1;
+    pointer-events: none;
+  }
 
-    /* Green trash bin at the bottom */
-    .bin-area {
-      position: absolute;
-      bottom: 24px;
-      left: 28px;
-    }
+  .form-card {
+    width: 100%;
+    max-width: 440px;
+  }
 
-    .bin {
-      width: 56px;
-      background-color: #1b5e20;
-      border-radius: 0 0 8px 8px;
-      height: 44px;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+  .form-header {
+    margin-bottom: 32px;
+  }
+  .form-header .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--green-pale);
+    color: var(--green-mid);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 20px;
+    margin-bottom: 14px;
+    letter-spacing: .4px;
+    text-transform: uppercase;
+  }
+  .form-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    color: var(--text-dark);
+    margin-bottom: 6px;
+  }
+  .form-header p {
+    color: var(--text-muted);
+    font-size: 15px;
+  }
 
-    .bin-lid {
-      width: 64px;
-      height: 10px;
-      background-color: #1b5e20;
-      border-radius: 4px;
-      position: absolute;
-      top: -12px;
-      left: -4px;
-    }
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
 
-    /* Recycling symbol ♻ */
-    .bin-symbol {
-      color: white;
-      font-size: 22px;
-    }
+  .input-group {
+    margin-bottom: 14px;
+  }
+  label {
+    display: block;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 7px;
+    letter-spacing: .3px;
+    text-transform: uppercase;
+  }
+  .input-wrap {
+    position: relative;
+  }
+  .input-wrap .icon {
+    position: absolute;
+    left: 14px; top: 50%;
+    transform: translateY(-50%);
+    font-size: 15px;
+    pointer-events: none;
+    opacity: .55;
+  }
+  .input-wrap .eye {
+    position: absolute;
+    right: 14px; top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 15px;
+    color: var(--text-muted);
+    background: none; border: none;
+    padding: 0;
+  }
+  input[type="text"],
+  input[type="email"],
+  input[type="password"] {
+    width: 100%;
+    padding: 13px 14px 13px 40px;
+    border: 1.5px solid var(--gray-border);
+    border-radius: 11px;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text-dark);
+    background: var(--gray-soft);
+    transition: border-color .2s, box-shadow .2s, background .2s;
+    outline: none;
+  }
+  input:focus {
+    border-color: var(--green-light);
+    box-shadow: 0 0 0 3px rgba(82,183,136,.15);
+    background: var(--white);
+  }
+  input.valid {
+    border-color: var(--green-light);
+  }
+  input.error {
+    border-color: #e63946;
+    box-shadow: 0 0 0 3px rgba(230,57,70,.1);
+  }
 
-    .bin-wheels {
-      display: flex;
-      justify-content: space-around;
-      margin-top: 4px;
-    }
+  /* strength bar */
+  .strength-wrap {
+    margin-top: -6px;
+    margin-bottom: 14px;
+  }
+  .strength-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+  .strength-text {
+    font-weight: 600;
+    transition: color .3s;
+  }
+  .strength-bar {
+    height: 5px;
+    background: var(--gray-border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .strength-fill {
+    height: 100%;
+    border-radius: 10px;
+    width: 0%;
+    transition: width .4s ease, background .4s ease;
+  }
 
-    .wheel {
-      width: 12px;
-      height: 12px;
-      background-color: #1b5e20;
-      border-radius: 50%;
-    }
+  .terms {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 22px;
+    line-height: 1.5;
+    cursor: pointer;
+    user-select: none;
+  }
+  .terms input[type="checkbox"] {
+    width: 16px; height: 16px;
+    accent-color: var(--green-mid);
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-top: 2px;
+    padding: 0;
+    border-radius: 4px;
+  }
+  .terms a { color: var(--green-mid); text-decoration: none; font-weight: 500; }
+  .terms a:hover { color: var(--green-light); }
 
-    /* ══════════════════════════════════════
-       RIGHT PANEL – the form
-    ══════════════════════════════════════ */
-    .right-panel {
-      flex: 1;
-      padding: 40px 36px;
-    }
+  .btn-register {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, var(--green-mid), var(--green-light));
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    letter-spacing: .4px;
+    transition: transform .15s, box-shadow .15s;
+    box-shadow: 0 6px 20px rgba(45,106,79,.35);
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .btn-register:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px rgba(45,106,79,.45);
+  }
+  .btn-register:active { transform: translateY(0); }
 
-    .form-title {
-      font-size: 24px;
-      font-weight: bold;
-      color: #1a1a1a;
-      margin-bottom: 4px;
-    }
+  .login-line {
+    text-align: center;
+    margin-top: 22px;
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+  .login-line a {
+    color: var(--green-mid);
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .login-line a:hover { color: var(--green-light); }
 
-    .form-subtitle {
-      font-size: 14px;
-      color: #777;
-      margin-bottom: 28px;
-    }
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity:0; transform:translateY(20px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+  .left-body  { animation: fadeUp .7s ease both .1s; }
+  .form-header { animation: fadeUp .6s ease both .1s; }
+  .two-col    { animation: fadeUp .6s ease both .2s; }
+  .input-group { animation: fadeUp .6s ease both; }
+  .input-group:nth-child(1){ animation-delay:.22s; }
+  .input-group:nth-child(2){ animation-delay:.3s; }
+  .input-group:nth-child(3){ animation-delay:.38s; }
+  .strength-wrap { animation: fadeUp .6s ease both .46s; }
+  .terms { animation: fadeUp .6s ease both .52s; }
+  .btn-register, .login-line { animation: fadeUp .6s ease both .58s; }
 
-    /* Each input group has a label icon + the actual input */
-    .input-group {
-      display: flex;
-      align-items: center;
-      border: 1.5px solid #ddd;
-      border-radius: 8px;
-      padding: 10px 14px;
-      margin-bottom: 16px;
-      gap: 10px;
-      background-color: #fafafa;
-    }
-
-    .input-group:focus-within {
-      border-color: #4caf50;
-      background-color: white;
-    }
-
-    /* The icon on the left of each input */
-    .input-icon {
-      font-size: 16px;
-      color: #888;
-    }
-
-    /* The text box itself */
-    .input-group input {
-      border: none;
-      outline: none;
-      background: transparent;
-      font-size: 14px;
-      color: #333;
-      width: 100%;
-    }
-
-    /* Eye icon on password fields */
-    .eye-icon {
-      color: #aaa;
-      cursor: pointer;
-      font-size: 16px;
-    }
-
-    /* Password strength row */
-    .strength-row {
-      margin-bottom: 20px;
-    }
-
-    .strength-label {
-      font-size: 13px;
-      color: #555;
-      margin-bottom: 6px;
-    }
-
-    .strength-label span {
-      color: #4caf50;
-      font-weight: bold;
-    }
-
-    /* The green bar */
-    .strength-bar-bg {
-      height: 6px;
-      background-color: #e0e0e0;
-      border-radius: 4px;
-    }
-
-    .strength-bar-fill {
-      height: 100%;
-      width: 75%;           /* "Strong" = 75% full */
-      background-color: #4caf50;
-      border-radius: 4px;
-    }
-
-    /* Register button */
-    .register-btn {
-      width: 100%;
-      padding: 14px;
-      background-color: #2e7d32;
-      color: white;
-      font-size: 16px;
-      font-weight: bold;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      margin-bottom: 18px;
-      letter-spacing: 0.5px;
-    }
-
-    .register-btn:hover {
-      background-color: #1b5e20;  /* darker green on hover */
-    }
-
-    /* Login link at the bottom */
-    .login-link {
-      text-align: center;
-      font-size: 14px;
-      color: #666;
-    }
-
-    .login-link a {
-      color: #2e7d32;
-      font-weight: bold;
-      text-decoration: none;
-    }
-
-    .login-link a:hover {
-      text-decoration: underline;
-    }
-  </style>
+  /* ── RESPONSIVE ── */
+  @media (max-width: 820px) {
+    .page { grid-template-columns: 1fr; grid-template-rows: auto 1fr; overflow-y:auto; }
+    html,body { overflow: auto; }
+    .left { min-height: 200px; padding: 32px; }
+    .left-body h1 { font-size: 26px; }
+    .features { display: none; }
+    .right { padding: 32px 24px; }
+  }
+</style>
 </head>
 <body>
 
-  <div class="card">
+<div class="page">
 
-    <!-- ── LEFT PANEL ── -->
-    <div class="left-panel">
-
-      <!-- Logo -->
-      <div class="logo">
-        <span class="logo-icon">🌿</span>
-        EcoTrack
-      </div>
-
-      <!-- Tagline -->
-      <p class="tagline">Together, let's build a cleaner tomorrow.</p>
-
-      <!-- Simple CSS skyline -->
-      <div class="skyline">
-        <div class="building b1"></div>
-        <div class="building b2"></div>
-        <div class="building b3"></div>
-        <div class="building b4"></div>
-        <div class="building b5"></div>
-        <div class="building b6"></div>
-      </div>
-
-      <!-- Trash bin -->
-      <div class="bin-area">
-        <div class="bin">
-          <div class="bin-lid"></div>
-          <span class="bin-symbol">♻</span>
-        </div>
-        <div class="bin-wheels">
-          <div class="wheel"></div>
-          <div class="wheel"></div>
-        </div>
-      </div>
-
+  <!-- ══ LEFT ══ -->
+  <div class="left">
+    <div class="brand">
+      <div class="brand-icon">🌱</div>
+      <span class="brand-name">EcoTrack</span>
     </div>
 
-    <!-- ── RIGHT PANEL ── -->
-    <div class="right-panel">
+    <div class="left-body">
+      <h1>Together,<br>let's build a<br>cleaner tomorrow.</h1>
+      <p>Join thousands of eco-warriors making real impact in cities across the globe.</p>
+    </div>
 
-      <h1 class="form-title">Create Account</h1>
-      <p class="form-subtitle">Join us and make a difference.</p>
+    <div class="features">
+      <div class="feature-item">
+        <div class="feature-icon">📊</div>
+        <div>
+          <div style="font-weight:600;margin-bottom:2px;">Track City Cleanliness</div>
+          <div style="opacity:.7;font-size:12px;font-weight:400;">Real-time reports & insights</div>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">♻️</div>
+        <div>
+          <div style="font-weight:600;margin-bottom:2px;">Report Waste Issues</div>
+          <div style="opacity:.7;font-size:12px;font-weight:400;">Flag problems in your area</div>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🏆</div>
+        <div>
+          <div style="font-weight:600;margin-bottom:2px;">Earn Green Points</div>
+          <div style="opacity:.7;font-size:12px;font-weight:400;">Rewarded for every action</div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-      <!-- Full Name -->
-      <div class="input-group">
-        <span class="input-icon">👤</span>
-        <input type="text" placeholder="Full Name" />
+  <!-- ══ RIGHT ══ -->
+  <div class="right">
+    <div class="form-card">
+
+      <div class="form-header">
+        <div class="badge">🌿 Free Forever</div>
+        <h2>Create Account</h2>
+        <p>Join us and make a difference — it only takes a minute.</p>
       </div>
 
-      <!-- Email -->
-      <div class="input-group">
-        <span class="input-icon">✉️</span>
-        <input type="email" placeholder="Email Address" />
+      <!-- Name row -->
+      <div class="two-col">
+        <div class="input-group" style="margin-bottom:0">
+          <label>First Name</label>
+          <div class="input-wrap">
+            <span class="icon">👤</span>
+            <input type="text" id="firstName" placeholder="Akhil" oninput="validateName(this)">
+          </div>
+        </div>
+        <div class="input-group" style="margin-bottom:0">
+          <label>Last Name</label>
+          <div class="input-wrap">
+            <span class="icon">👤</span>
+            <input type="text" id="lastName" placeholder="Shrestha" oninput="validateName(this)">
+          </div>
+        </div>
       </div>
+      <div style="height:14px"></div>
 
-      <!-- Password -->
       <div class="input-group">
-        <span class="input-icon">🔒</span>
-        <input type="password" placeholder="Password" id="pw" />
-        <span class="eye-icon" onclick="togglePw('pw')">👁</span>
-      </div>
-
-      <!-- Confirm Password -->
-      <div class="input-group">
-        <span class="input-icon">🔒</span>
-        <input type="password" placeholder="Confirm Password" id="cpw" />
-        <span class="eye-icon" onclick="togglePw('cpw')">👁</span>
-      </div>
-
-      <!-- Password Strength -->
-      <div class="strength-row">
-        <p class="strength-label">Password strength: <span>Strong</span></p>
-        <div class="strength-bar-bg">
-          <div class="strength-bar-fill"></div>
+        <label>Email Address</label>
+        <div class="input-wrap">
+          <span class="icon">📧</span>
+          <input type="email" id="email" placeholder="you@example.com" oninput="validateEmail(this)">
         </div>
       </div>
 
-      <!-- Register Button -->
-      <button class="register-btn">Register</button>
+      <div class="input-group">
+        <label>Password</label>
+        <div class="input-wrap">
+          <span class="icon">🔒</span>
+          <input type="password" id="password" placeholder="Min. 8 characters" oninput="checkStrength(this.value)">
+          <button class="eye" onclick="togglePwd('password','eye1')" id="eye1">👁</button>
+        </div>
+      </div>
 
-      <!-- Login Link -->
-      <p class="login-link">
-        Already have an account? <a href="/login">Login here</a>
-      </p>
+      <div class="strength-wrap">
+        <div class="strength-label">
+          <span>Password strength</span>
+          <span class="strength-text" id="strengthText">—</span>
+        </div>
+        <div class="strength-bar">
+          <div class="strength-fill" id="strengthFill"></div>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>Confirm Password</label>
+        <div class="input-wrap">
+          <span class="icon">🔒</span>
+          <input type="password" id="confirmPassword" placeholder="Re-enter password" oninput="validateConfirm(this)">
+          <button class="eye" onclick="togglePwd('confirmPassword','eye2')" id="eye2">👁</button>
+        </div>
+      </div>
+
+      <label class="terms">
+        <input type="checkbox" id="terms">
+        I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+      </label>
+
+      <button class="btn-register" onclick="handleRegister()">
+         Create My Account
+      </button>
+
+      <p class="login-line">Already have an account? <a href="/login">Login here</a></p>
 
     </div>
   </div>
 
-  <script>
-    // Toggle password visibility
-    function togglePw(id) {
-      const input = document.getElementById(id);
-      if (input.type === "password") {
-        input.type = "text";
-      } else {
-        input.type = "password";
-      }
-    }
-  </script>
+</div>
 
+<script>
+  function togglePwd(id, btnId) {
+    const input = document.getElementById(id);
+    const btn = document.getElementById(btnId);
+    if (input.type === 'password') { input.type = 'text'; btn.textContent = '🙈'; }
+    else { input.type = 'password'; btn.textContent = '👁'; }
+  }
+
+  function validateName(el) {
+    el.classList.toggle('valid', el.value.trim().length > 1);
+    el.classList.toggle('error', el.value.trim().length === 1);
+  }
+
+  function validateEmail(el) {
+    const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value);
+    el.classList.toggle('valid', ok && el.value.length > 0);
+    el.classList.toggle('error', !ok && el.value.length > 0);
+  }
+
+  function validateConfirm(el) {
+    const pwd = document.getElementById('password').value;
+    el.classList.toggle('valid', el.value === pwd && pwd.length > 0);
+    el.classList.toggle('error', el.value !== pwd && el.value.length > 0);
+  }
+
+  function checkStrength(val) {
+    const fill = document.getElementById('strengthFill');
+    const text = document.getElementById('strengthText');
+    let score = 0;
+    if (val.length >= 8) score++;
+    if (/[A-Z]/.test(val)) score++;
+    if (/[0-9]/.test(val)) score++;
+    if (/[^A-Za-z0-9]/.test(val)) score++;
+
+    const levels = [
+      { w:'0%',   color:'#e63946', label:'—' },
+      { w:'25%',  color:'#e63946', label:'Weak' },
+      { w:'50%',  color:'#f4a261', label:'Fair' },
+      { w:'75%',  color:'#52b788', label:'Good' },
+      { w:'100%', color:'#2d6a4f', label:'Strong' },
+    ];
+    const l = levels[val.length === 0 ? 0 : score];
+    fill.style.width = l.w;
+    fill.style.background = l.color;
+    text.textContent = l.label;
+    text.style.color = l.color;
+  }
+
+  function handleRegister() {
+    const firstName = document.getElementById('firstName').value.trim();
+    const lastName  = document.getElementById('lastName').value.trim();
+    const email     = document.getElementById('email').value.trim();
+    const password  = document.getElementById('password').value;
+    const confirm   = document.getElementById('confirmPassword').value;
+    const agreed    = document.getElementById('terms').checked;
+
+    if (!firstName || !lastName || !email || !password || !confirm) {
+      alert('Please fill in all fields.'); return;
+    }
+    if (password !== confirm) {
+      alert('Passwords do not match.'); return;
+    }
+    if (!agreed) {
+      alert('Please agree to the Terms of Service.'); return;
+    }
+    alert('Account created! Welcome to EcoTrack, ' + firstName + ' 🌱');
+  }
+</script>
 </body>
 </html>
-
